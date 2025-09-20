@@ -70,4 +70,21 @@ app.post("/api/chat", async (req, res) => {
 // app.get("*", (_, res) => res.sendFile(path.join(__dirname, "../frontend/dist/index.html")));
 
 const port = process.env.PORT || 8080;
+// --- Serve the built frontend if present ---
+import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Try Vite (dist) first, then CRA (build)
+import fs from "fs";
+const viteDist = path.join(__dirname, "../frontend/dist");
+const craBuild = path.join(__dirname, "../frontend/build");
+
+if (fs.existsSync(viteDist)) {
+  app.use(express.static(viteDist));
+  app.get("*", (_req, res) => res.sendFile(path.join(viteDist, "index.html")));
+} else if (fs.existsSync(craBuild)) {
+  app.use(express.static(craBuild));
+  app.get("*", (_req, res) => res.sendFile(path.join(craBuild, "index.html")));
+}
 app.listen(port, () => console.log(`✅ API listening on http://localhost:${port}`));
