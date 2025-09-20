@@ -34,15 +34,13 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
 
-      # --- Package only the compiled UI (frontend/dist) ---
-      - name: Zip project
-        run: |
-          cd frontend
-          zip -r ../app.zip dist
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: pelican-chat
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-          package: app.zip
+    # --- Package only the compiled UI ---
+- name: Zip project
+  run: |
+    if [ -d "frontend/dist" ]; then
+      cd frontend && zip -r ../app.zip dist
+    elif [ -d "frontend/build" ]; then
+      cd frontend && zip -r ../app.zip build
+    else
+      echo "No dist/build folder found after npm run build" && exit 1
+    fi
