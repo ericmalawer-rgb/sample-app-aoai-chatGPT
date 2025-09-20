@@ -20,12 +20,12 @@ jobs:
 
       - name: Install backend dependencies
         working-directory: backend
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build frontend
         working-directory: frontend
         run: |
-          npm ci
+          npm install --no-audit --no-fund
           npm run build
 
       - name: Zip project
