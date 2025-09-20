@@ -2,8 +2,9 @@ name: Deploy Pelican Chat App to Azure
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
+  workflow_dispatch: {}
 
 jobs:
   build-and-deploy:
@@ -22,7 +23,7 @@ jobs:
       # --- Backend (Express) ---
       - name: Install backend deps
         working-directory: express-backend
-        run: npm install --no-audit --no-fund
+        run: npm install --omit=dev --no-audit --no-fund
 
       # --- Frontend (if present) ---
       - name: Build frontend
@@ -31,15 +32,13 @@ jobs:
           npm install --no-audit --no-fund
           npm run build || echo "no build script; continuing"
 
-      # --- Package & deploy ---
-      # IMPORTANT: do NOT exclude express-backend/node_modules so the app can run without building on server
+      # --- Package & deploy (keep express-backend/node_modules) ---
       - name: Zip project
-  run: |
-    zip -r app.zip . \
-      -x ".git/*" ".github/*" \
-         "node_modules/*" \
-         "frontend/node_modules/*"
-# ⚠️ Notice: express-backend/node_modules is NOT excluded anymore
+        run: |
+          zip -r app.zip . \
+            -x ".git/*" ".github/*" \
+               "node_modules/*" \
+               "frontend/node_modules/*"
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
