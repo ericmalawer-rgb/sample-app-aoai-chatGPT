@@ -34,11 +34,12 @@ jobs:
       # --- Package & deploy ---
       # IMPORTANT: do NOT exclude express-backend/node_modules so the app can run without building on server
       - name: Zip project
-        run: |
-          zip -r app.zip . \
-            -x ".git/*" ".github/*" \
-               "node_modules/*" \
-               "frontend/node_modules/*"
+  run: |
+    zip -r app.zip . \
+      -x ".git/*" ".github/*" \
+         "node_modules/*" \
+         "frontend/node_modules/*"
+# ⚠️ Notice: express-backend/node_modules is NOT excluded anymore
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
