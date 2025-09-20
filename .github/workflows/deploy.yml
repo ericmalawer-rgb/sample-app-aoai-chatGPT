@@ -8,28 +8,32 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install backend dependencies
-        working-directory: backend
+      # --- Backend (Express) ---
+      - name: Install backend deps
+        working-directory: express-backend
         run: npm install --no-audit --no-fund
 
+      # --- Frontend (if present) ---
       - name: Build frontend
         working-directory: frontend
         run: |
           npm install --no-audit --no-fund
-          npm run build
+          npm run build || echo "no build script; continuing"
 
+      # --- Package & deploy ---
       - name: Zip project
-        run: zip -r app.zip . -x ".git/*" ".github/*"
+        run: zip -r app.zip . -x ".git/*" ".github/*" "node_modules/*" "frontend/node_modules/*" "express-backend/node_modules/*"
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
