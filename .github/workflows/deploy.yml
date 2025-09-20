@@ -31,6 +31,9 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npm run build || echo "no build script; continuing"
+          if [ -d "dist" ]; then
+            mv dist ../frontend-dist
+          fi
 
       # --- Package & deploy (keep express-backend/node_modules) ---
       - name: Zip project
