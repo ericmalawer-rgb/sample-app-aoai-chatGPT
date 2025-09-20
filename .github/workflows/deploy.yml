@@ -34,13 +34,13 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
 
-    # --- Package only the compiled UI ---
+# --- Package only the compiled UI ---
 - name: Zip project
   run: |
     if [ -d "frontend/dist" ]; then
-      cd frontend && zip -r ../app.zip dist
+      cd frontend && zip -r ../app.zip dist && cd ..
     elif [ -d "frontend/build" ]; then
-      cd frontend && zip -r ../app.zip build
+      cd frontend && zip -r ../app.zip build && cd ..
     else
       echo "No dist/build folder found after npm run build" && exit 1
     fi
