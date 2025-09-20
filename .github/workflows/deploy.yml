@@ -44,3 +44,10 @@ jobs:
     else
       echo "No dist/build folder found after npm run build" && exit 1
     fi
+
+- name: Deploy to Azure Web App
+  uses: azure/webapps-deploy@v2
+  with:
+    app-name: pelican-chat
+    publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+    package: app.zip
