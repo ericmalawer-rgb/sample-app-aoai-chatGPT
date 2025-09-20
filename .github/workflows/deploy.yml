@@ -22,7 +22,7 @@ jobs:
 
       # --- Backend (Express) ---
       - name: Install backend deps
-        working-directory: express-backend
+        working-directory: backend
         run: npm install --omit=dev --no-audit --no-fund
 
       # --- Frontend (if present) ---
